@@ -31,14 +31,14 @@ function createDevContext(
                 const systemMsg = req.messages.find(m => m.role === "system")?.content ?? ""
                 console.log(`[mock ai] call #${callCount}`)
 
-                // ── before image prompt ───────────────────────────────────────
-                if (systemMsg.includes('"before"')) {
-                    return `A messy living room with old worn-out furniture, dim lighting, cluttered floor, before renovation, realistic photo`
+                // ── before image prompt (generateBeforeImage) — furniture ──────
+                if (systemMsg.includes("EMPTY room") && systemMsg.includes("NO furniture")) {
+                    return `An empty living room with no furniture, bare hardwood floor, same cream-colored walls, same natural side lighting from left window, same wide-angle perspective, realistic interior photo, 9:16 vertical`
                 }
 
-                // ── after image prompt ────────────────────────────────────────
-                if (systemMsg.includes('"after"')) {
-                    return `A beautifully renovated living room with modern L-Shape sofa, warm lighting, clean minimalist decor, after transformation, realistic photo`
+                // ── before image prompt (generateBeforeImage) — home ──────────
+                if (systemMsg.includes("EMPTY LAND") && systemMsg.includes("NO building")) {
+                    return `An empty plot of land with no building, same surrounding trees and landscape, same sky and natural lighting, same camera angle, realistic photo, 9:16 vertical`
                 }
 
                 // Fallback
@@ -83,13 +83,13 @@ async function main() {
         console.error("=== Test case 1 failed ===", err)
     }
 
-    // ── Test case 2: category = home ─────────────────────────────────────────
-    console.log("\n=== Test case 2: home ===")
+    // ── Test case 2: category = home (บ้านที่สร้างเสร็จแล้ว) ─────────────────
+    console.log("\n=== Test case 2: home (บ้านเสร็จแล้ว → ที่ดินเปล่า) ===")
     callCount = 0
     const ctx2 = createDevContext({
-        image_url: "https://example.com/images/bedroom-before.jpg",
-        product: "ชุดตกแต่งห้องนอนมินิมอล",
-        description: "ชุดตกแต่งห้องนอนสไตล์มินิมอล ประกอบด้วยผ้าม่าน โคมไฟ และพรม",
+        image_url: "https://example.com/images/house-completed.jpg",
+        product: "บ้านเดี่ยว 2 ชั้น สไตล์โมเดิร์น",
+        description: "บ้านเดี่ยว 2 ชั้น หลังคาทรงแบน ผนังสีขาว พร้อมสวนหน้าบ้าน",
         category: "home",
     })
     try {

@@ -1,7 +1,8 @@
-import { defineAgent, getEnvString } from "@lifetimesoft/agent-sdk"
+import { defineAgent } from "@lifetimesoft/agent-sdk"
+import { generateBeforeImage } from "./tools/generateBeforeImage"
 
 export interface VideoTimelapseInput {
-    image_url: string
+    image_url: string   // after image — ภาพผลลัพธ์สุดท้าย (บ้านเสร็จ / ห้องมีสินค้าแล้ว)
     product: string
     description: string
     category: "home" | "furniture"
@@ -12,6 +13,9 @@ interface VideoTimelapseOutput {
     status: "completed" | "failed"
     product: string
     category: string
+    before_prompt: string
+    before_image_url: string
+    after_image_url: string  // = image_url input
 }
 
 export default defineAgent<VideoTimelapseInput, VideoTimelapseOutput>({
@@ -19,48 +23,19 @@ export default defineAgent<VideoTimelapseInput, VideoTimelapseOutput>({
         const { image_url, product, description, category } = ctx.input
 
         ctx.log.info(`[video-timelapse-agent] Starting for product: ${product} (${category})`)
-        ctx.log.info(`[video-timelapse-agent] Source image: ${image_url}`)
+        ctx.log.info(`[video-timelapse-agent] After image (input): ${image_url}`)
 
-        const aiModel = getEnvString(ctx.env, "ai_model", "gemini-2.0-flash-exp")
+        // Step 1: Generate "before" image — remove everything, keep background
+        // after image = image_url (user input), before = generated from it
+        ctx.log.info("[Step 1] Generating before image from after reference...")
+        const before = await generateBeforeImage({ image_url, product, description, category }, ctx)
 
-        // Step 1: Generate "before" image prompt
-        ctx.log.info("[Step 1] Generating before image...")
-        const beforePrompt = await ctx.ai.chat({
-            messages: [
-                {
-                    role: "system",
-                    content: `You are an interior design AI. Generate a concise image generation prompt for a "before" scene — the original state before any product or decoration is applied. Keep it under 100 words.`,
-                },
-                {
-                    role: "user",
-                    content: `Product: ${product}\nDescription: ${description}\nCategory: ${category}\nOriginal image URL: ${image_url}`,
-                },
-            ],
-            model: aiModel,
-        })
-        ctx.log.info("[Step 1] Before prompt:", beforePrompt)
+        // Step 2: Create timelapse video (before → after) 9:16
+        // after_url = image_url (the original input)
+        ctx.log.info("[Step 2] Creating 9:16 timelapse video (before → after)...")
 
-        // Step 2: Generate "after" image prompt
-        ctx.log.info("[Step 2] Generating after image...")
-        const afterPrompt = await ctx.ai.chat({
-            messages: [
-                {
-                    role: "system",
-                    content: `You are an interior design AI. Generate a concise image generation prompt for an "after" scene — showing the space transformed with the product applied. Keep it under 100 words.`,
-                },
-                {
-                    role: "user",
-                    content: `Product: ${product}\nDescription: ${description}\nCategory: ${category}\nBefore scene: ${beforePrompt}`,
-                },
-            ],
-            model: aiModel,
-        })
-        ctx.log.info("[Step 2] After prompt:", afterPrompt)
-
-        // Step 3: Create timelapse video (before → after) 9:16
-        ctx.log.info("[Step 3] Creating 9:16 timelapse video (before → after)...")
-
-        // TODO: integrate with image generation + video rendering service
+        // TODO: integrate with video rendering service
+        // const videoUrl = await createTimelapseVideo({ before_url: before.image_url, after_url: image_url })
         const videoUrl = ""
 
         ctx.log.info("[video-timelapse-agent] Done.")
@@ -70,6 +45,9 @@ export default defineAgent<VideoTimelapseInput, VideoTimelapseOutput>({
             status: "completed",
             product,
             category,
+            before_prompt: before.prompt,
+            before_image_url: before.image_url,
+            after_image_url: image_url,
         }
     },
 })
