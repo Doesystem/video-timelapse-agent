@@ -1,0 +1,26 @@
+{
+    "name": "video-timelapse-agent",
+    "version": "0.0.1",
+    "description": "AI Agent สำหรับสร้างวิดีโอ timelapse แนวตั้ง 9:16 จากภาพสินค้า",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch",
+        "dev:run": "npx ts-node --project tsconfig.json src/dev.ts",
+        "test": "vitest run",
+        "test:watch": "vitest"
+    },
+    "dependencies": {
+        "@lifetimesoft/agent-sdk": "0.0.14"
+    },
+    "devDependencies": {
+        "ts-node": "10.9.2",
+        "typescript": "5.9.3",
+        "vitest": "3.2.4"
+    },
+    "ts-node": {
+        "esm": false,
+        "experimentalSpecifierResolution": "node"
+    },
+    "license": "MIT"
+}
