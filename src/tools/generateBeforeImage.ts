@@ -11,29 +11,38 @@ export interface GenerateBeforeImageInput {
 
 export interface GeneratedImage {
     prompt: string
-    image_url: string   // URL ของภาพ before ที่ generate แล้ว (จาก image gen API)
+    image_url: string
 }
 
-// ─── System Prompts by Category (from skill.md) ───────────────────────────────
+// ─── Image Prompt Templates by Category ──────────────────────────────────────
+// Build prompt directly — no need to call chat() as an intermediate step.
+// Templates are fixed per category; dynamic parts come from input fields.
 
-const SYSTEM_PROMPT: Record<Category, string> = {
-    furniture: `You are an interior design AI that creates image generation prompts.
-Your task: create a "before" prompt that shows an EMPTY room with NO furniture.
-Rules:
-- Remove ALL furniture (sofa, table, chairs, cabinets, shelves, bed, wardrobe)
-- Remove ALL decorations (pillows, rugs, plants, artwork, lamps)
-- Keep the EXACT same: wall color/material, floor type/color, lighting direction, camera angle, windows/doors/architectural elements
-- Always end with: "realistic interior photo, 9:16 vertical"
-- Output the prompt only, no explanation`,
+function buildBeforePrompt(input: GenerateBeforeImageInput): string {
+    switch (input.category) {
+        case "furniture":
+            // Remove all furniture/decor, keep room background identical to reference
+            return [
+                `Empty room interior, no furniture, no decorations, no objects,`,
+                `bare floor and walls only,`,
+                `same room layout and architectural features as reference image,`,
+                `same wall color, same floor material, same lighting direction, same camera angle,`,
+                `same windows and doors,`,
+                `clean empty space ready for staging,`,
+                `realistic interior photo, 9:16 vertical portrait`,
+            ].join(" ")
 
-    home: `You are an architectural visualization AI that creates image generation prompts.
-Your task: create a "before" prompt that shows the EMPTY LAND or SITE with NO building.
-Rules:
-- Remove the entire building/house/structure completely
-- Keep the EXACT same: sky, surrounding environment, trees/landscape, ground level, lighting, camera angle
-- Show only the empty plot of land or construction site as it would look before building
-- Always end with: "realistic photo, 9:16 vertical"
-- Output the prompt only, no explanation`,
+        case "home":
+            // Remove entire building, keep land/environment identical to reference
+            return [
+                `Empty plot of land, no building, no house, no structure,`,
+                `bare ground only,`,
+                `same surrounding environment as reference image,`,
+                `same sky, same trees and landscape, same ground level, same lighting, same camera angle,`,
+                `empty construction site or undeveloped land,`,
+                `realistic outdoor photo, 9:16 vertical portrait`,
+            ].join(" ")
+    }
 }
 
 // ─── Tool ─────────────────────────────────────────────────────────────────────
@@ -44,32 +53,20 @@ export async function generateBeforeImage(
 ): Promise<GeneratedImage> {
     ctx.log.info(`[generateBeforeImage] category: ${input.category}, product: ${input.product}`)
 
-    // Step 1: Ask AI to build the before prompt based on the after image
-    const beforePrompt = await ctx.ai.chat({
-        messages: [
-            { role: "system", content: SYSTEM_PROMPT[input.category] },
-            {
-                role: "user",
-                content: `Product: ${input.product}
-Description: ${input.description}
-After image (reference): ${input.image_url}
-
-Generate the "before" image prompt. The background, lighting, and camera angle must match the reference image exactly.`,
-            },
-        ],
-        temperature: 0.3,  // low temp — consistency over creativity
-    })
-
+    // Build prompt directly from template — no chat() call needed
+    const beforePrompt = buildBeforePrompt(input)
     ctx.log.info(`[generateBeforeImage] prompt: ${beforePrompt}`)
 
-    // Step 2: Call image generation API (TODO: replace with actual API call)
-    // const imageUrl = await callImageGenAPI(beforePrompt)
-    const imageUrl = ""  // placeholder
+    // Generate the before image
+    const generatedImageUrl = await ctx.ai.image({
+        prompt: beforePrompt,
+        size: "1024x1792",   // 9:16 portrait
+    })
 
-    ctx.log.info(`[generateBeforeImage] done — image_url: ${imageUrl || "(placeholder)"}`)
+    ctx.log.info(`[generateBeforeImage] done — image_url: ${generatedImageUrl}`)
 
     return {
         prompt: beforePrompt,
-        image_url: imageUrl,
+        image_url: generatedImageUrl,
     }
 }

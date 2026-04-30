@@ -29,20 +29,14 @@ function createDevContext(
             chat: async (req) => {
                 callCount++
                 const systemMsg = req.messages.find(m => m.role === "system")?.content ?? ""
-                console.log(`[mock ai] call #${callCount}`)
-
-                // ── before image prompt (generateBeforeImage) — furniture ──────
-                if (systemMsg.includes("EMPTY room") && systemMsg.includes("NO furniture")) {
-                    return `An empty living room with no furniture, bare hardwood floor, same cream-colored walls, same natural side lighting from left window, same wide-angle perspective, realistic interior photo, 9:16 vertical`
-                }
-
-                // ── before image prompt (generateBeforeImage) — home ──────────
-                if (systemMsg.includes("EMPTY LAND") && systemMsg.includes("NO building")) {
-                    return `An empty plot of land with no building, same surrounding trees and landscape, same sky and natural lighting, same camera angle, realistic photo, 9:16 vertical`
-                }
-
-                // Fallback
+                console.log(`[mock ai] chat call #${callCount}`)
+                // Fallback — generateBeforeImage no longer calls chat()
                 return `Mock AI response for: ${systemMsg.slice(0, 60)}...`
+            },
+            image: async (req) => {
+                callCount++
+                console.log(`[mock ai] image call #${callCount} — prompt: ${req.prompt.slice(0, 80)}...`)
+                return `https://static.lifetimesoft.com/ai-images/mock_before_${Date.now()}.png`
             },
         },
         storage: {
