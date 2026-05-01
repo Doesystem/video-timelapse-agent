@@ -57,10 +57,11 @@ export async function generateBeforeImage(
     const beforePrompt = buildBeforePrompt(input)
     ctx.log.info(`[generateBeforeImage] prompt: ${beforePrompt}`)
 
-    // Generate the before image
+    // Generate the before image — pass the after image as reference for background matching
     const generatedImageUrl = await ctx.ai.image({
         prompt: beforePrompt,
         size: "1024x1792",   // 9:16 portrait
+        image_url: input.image_url,
     })
 
     ctx.log.info(`[generateBeforeImage] done — image_url: ${generatedImageUrl}`)
