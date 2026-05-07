@@ -4,13 +4,9 @@
     "description": "AI Agent สำหรับสร้างวิดีโอ timelapse แนวตั้ง 9:16 จากภาพสินค้า (TikTok / Instagram Reels / YouTube Shorts)",
     "runtime": "node20",
     "main": "dist/index.js",
-    "public": false,
-    "version_public": false,
-    "pull_public": false,
-    "config": {
-        "memory_limit": "1024mb",
-        "timeout": 3600
-    },
+    "public": true,
+    "version_public": true,
+    "pull_public": true,
     "input": {
         "type": "json",
         "schema": {
@@ -32,33 +28,10 @@
     "capabilities": {
         "ai": {
             "required": true,
-            "features": ["chat"]
+            "features": ["chat", "image"]
         }
     },
     "env": [
-        {
-            "name": "ai_model",
-            "type": "string",
-            "label": "AI Model",
-            "description": "AI model สำหรับ generate image prompt",
-            "default": "gemini-2.0-flash-exp",
-            "required": false
-        },
-        {
-            "name": "image_gen_api_key",
-            "type": "password",
-            "label": "Image Generation API Key",
-            "description": "API key สำหรับ image generation service",
-            "required": false
-        },
-        {
-            "name": "video_output_format",
-            "type": "string",
-            "label": "Video Output Format",
-            "description": "Format ของวิดีโอ output",
-            "default": "mp4",
-            "required": false
-        }
     ],
     "keywords": ["video", "timelapse", "short-video", "tiktok", "reels", "home", "furniture", "ai"]
 }

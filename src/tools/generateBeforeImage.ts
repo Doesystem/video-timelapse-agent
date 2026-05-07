@@ -3,7 +3,7 @@ import type { Context } from "@lifetimesoft/agent-sdk"
 export type Category = "home" | "furniture"
 
 export interface GenerateBeforeImageInput {
-    image_url: string   // after image (reference) — พื้นหลังต้องเหมือนนี้
+    image_url: string   // after image (reference)
     product: string
     description: string
     category: Category

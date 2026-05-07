@@ -60,6 +60,23 @@ function createDevContext(
 // ─── Run ──────────────────────────────────────────────────────────────────────
 
 async function main() {
+    // ── Test case 1: category = furniture ────────────────────────────────────
+    // console.log("\n=== Test case 1: furniture ===")
+    // callCount = 0
+    // const ctx1 = createDevContext({
+    //     image_url: "https://example.com/images/living-room-before.jpg",
+    //     product: "โซฟา L-Shape สีเทา",
+    //     description: "โซฟาสไตล์โมเดิร์น เหมาะกับห้องนั่งเล่นขนาดกลาง-ใหญ่",
+    //     category: "furniture",
+    // })
+    // try {
+    //     const result = await agent.run(ctx1)
+    //     console.log("[result]", result)
+    //     console.log("=== Test case 1 completed ===")
+    // } catch (err) {
+    //     console.error("=== Test case 1 failed ===", err)
+    // }
+
     // ── Test case 2: category = home (บ้านที่สร้างเสร็จแล้ว) ─────────────────
     console.log("\n=== Test case 2: home (บ้านเสร็จแล้ว → ที่ดินเปล่า) ===")
     callCount = 0

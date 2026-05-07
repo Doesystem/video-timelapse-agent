@@ -29,6 +29,7 @@ export default defineAgent<VideoTimelapseInput, VideoTimelapseOutput>({
         // after image = image_url (user input), before = generated from it
         ctx.log.info("[Step 1] Generating before image from after reference...")
         const before = await generateBeforeImage({ image_url, product, description, category }, ctx)
+        ctx.log.info("[Step 1] response before data: " + JSON.stringify(before))        
 
         // Step 2: Create timelapse video (before → after) 9:16
         // after_url = image_url (the original input)
