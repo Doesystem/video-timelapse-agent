@@ -35,12 +35,7 @@ function buildBeforePrompt(input: GenerateBeforeImageInput): string {
         case "home":
             // Remove entire building, keep land/environment identical to reference
             return [
-                `Empty plot of land, no building, no house, no structure,`,
-                `bare ground only,`,
-                `same surrounding environment as reference image,`,
-                `same sky, same trees and landscape, same ground level, same lighting, same camera angle,`,
-                `empty construction site or undeveloped land,`,
-                `realistic outdoor photo, 9:16 vertical portrait`,
+                "เอารูปบ้านออกให้หน่อย ให้เหลือแค่สภาพแวดล้อมให้เหมือนเดิม"
             ].join(" ")
     }
 }
