@@ -8,22 +8,16 @@
     "version_public": true,
     "pull_public": true,
     "input": {
-        "type": "json",
-        "schema": {
-            "image_url": "string",
-            "product": "string",
-            "description": "string",
-            "category": "home | furniture"
-        }
+        "type": "object",
+        "hints": [
+            "image_url", "product", "description", "category"
+        ]
     },
     "output": {
-        "type": "json",
-        "schema": {
-            "video_url": "string",
-            "status": "string",
-            "product": "string",
-            "category": "string"
-        }
+        "type": "object",
+        "hints": [
+            "video_url", "status", "product", "category"
+        ]
     },
     "capabilities": {
         "ai": {
