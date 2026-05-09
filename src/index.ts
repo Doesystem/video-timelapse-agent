@@ -20,16 +20,20 @@ interface VideoTimelapseOutput {
 
 export default defineAgent<VideoTimelapseInput, VideoTimelapseOutput>({
     async run(ctx) {
-        const { image_url, product, description, category } = ctx.input
+        const input = ctx.input as VideoTimelapseInput | null
 
-        if (!image_url?.trim()) {
+        ctx.log.info("[video-timelapse-agent] ctx.input: " + JSON.stringify(ctx.input))
+
+        if (!input?.image_url?.trim()) {
             ctx.log.error("[video-timelapse-agent] Missing required field: image_url")
-            return { video_url: "", status: "failed", product, category, before_prompt: "", before_image_url: "", after_image_url: "" }
+            return { video_url: "", status: "failed", product: input?.product ?? "", category: input?.category ?? "", before_prompt: "", before_image_url: "", after_image_url: "" }
         }
-        if (!category) {
+        if (!input?.category) {
             ctx.log.error("[video-timelapse-agent] Missing required field: category")
-            return { video_url: "", status: "failed", product, category, before_prompt: "", before_image_url: "", after_image_url: "" }
+            return { video_url: "", status: "failed", product: input?.product ?? "", category: "", before_prompt: "", before_image_url: "", after_image_url: "" }
         }
+
+        const { image_url, product, description, category } = input
 
         ctx.log.info(`[video-timelapse-agent] Starting for product: ${product} (${category})`)
         ctx.log.info(`[video-timelapse-agent] After image (input): ${image_url}`)
