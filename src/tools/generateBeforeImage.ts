@@ -23,13 +23,7 @@ function buildBeforePrompt(input: GenerateBeforeImageInput): string {
         case "furniture":
             // Remove all furniture/decor, keep room background identical to reference
             return [
-                `Empty room interior, no furniture, no decorations, no objects,`,
-                `bare floor and walls only,`,
-                `same room layout and architectural features as reference image,`,
-                `same wall color, same floor material, same lighting direction, same camera angle,`,
-                `same windows and doors,`,
-                `clean empty space ready for staging,`,
-                `realistic interior photo, 9:16 vertical portrait`,
+                "เอาเฟอร์นิเจอร์และของตกแต่งออกให้หน่อย ให้เหลือแค่สภาพห้องเปล่าให้เหมือนเดิม",
             ].join(" ")
 
         case "home":

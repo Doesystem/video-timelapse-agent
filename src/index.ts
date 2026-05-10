@@ -1,5 +1,6 @@
 import { defineAgent } from "@lifetimesoft/agent-sdk"
 import { generateBeforeImage } from "./tools/generateBeforeImage"
+import { generateTimelapseVideo } from "./tools/generateTimelapseVideo"
 
 export interface VideoTimelapseInput {
     image_url: string   // after image — ภาพผลลัพธ์สุดท้าย (บ้านเสร็จ / ห้องมีสินค้าแล้ว)
@@ -45,17 +46,14 @@ export default defineAgent<VideoTimelapseInput, VideoTimelapseOutput>({
         ctx.log.info("[Step 1] response before data: " + JSON.stringify(before))        
 
         // Step 2: Create timelapse video (before → after) 9:16
-        // after_url = image_url (the original input)
         ctx.log.info("[Step 2] Creating 9:16 timelapse video (before → after)...")
-
-        // TODO: integrate with video rendering service
-        // const videoUrl = await createTimelapseVideo({ before_url: before.image_url, after_url: image_url })
-        const videoUrl = ""
+        const video = await generateTimelapseVideo({ before_url: before.image_url, after_url: image_url, category }, ctx)
+        ctx.log.info("[Step 2] response video data: " + JSON.stringify(video))
 
         ctx.log.info("[video-timelapse-agent] Done.")
 
         return {
-            video_url: videoUrl,
+            video_url: video.video_url,
             status: "completed",
             product,
             category,
