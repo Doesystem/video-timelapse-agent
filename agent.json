@@ -1,6 +1,6 @@
 {
     "name": "video-timelapse-agent",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "AI Agent สำหรับสร้างวิดีโอ timelapse แนวตั้ง 9:16 จากภาพสินค้า (TikTok / Instagram Reels / YouTube Shorts)",
     "runtime": "node20",
     "main": "dist/index.js",
