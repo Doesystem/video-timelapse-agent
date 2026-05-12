@@ -38,6 +38,11 @@ function createDevContext(
                 console.log(`[mock ai] image call #${callCount} — prompt: ${req.prompt.slice(0, 80)}...`)
                 return `https://static.lifetimesoft.com/ai-images/mock_before_${Date.now()}.png`
             },
+            video: async (req) => {
+                callCount++
+                console.log(`[mock ai] video call #${callCount} — before: ${req.before_url.slice(0, 60)}`)
+                return `https://static.lifetimesoft.com/ai-videos/mock_timelapse_${Date.now()}.mp4`
+            },
         },
         storage: {
             get: async () => null,
