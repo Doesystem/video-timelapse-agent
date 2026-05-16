@@ -10,22 +10,39 @@
     "input": {
         "type": "object",
         "hints": [
-            "image_url", "product", "description", "category"
+            "image_url",
+            "product",
+            "description",
+            "category"
         ]
     },
     "output": {
         "type": "object",
         "hints": [
-            "video_url", "status", "product", "category"
+            "video_url",
+            "status",
+            "product",
+            "category"
         ]
     },
     "capabilities": {
         "ai": {
             "required": true,
-            "features": ["chat", "image"]
+            "features": [
+                "chat",
+                "image"
+            ]
         }
     },
-    "env": [
-    ],
-    "keywords": ["video", "timelapse", "short-video", "tiktok", "reels", "home", "furniture", "ai"]
+    "env": [],
+    "keywords": [
+        "video",
+        "timelapse",
+        "short-video",
+        "tiktok",
+        "reels",
+        "home",
+        "furniture",
+        "ai"
+    ]
 }
